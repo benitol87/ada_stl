@@ -1,0 +1,7 @@
+# Fichiers temporaires
+*~
+*.swp
+
+# Fichiers SVG et STL
+*.stl
+*.svg
