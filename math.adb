@@ -20,15 +20,45 @@ package body Math is
 		return R;
 	end;
 
+	-- Calcul des coordonnées d'un point d'une courbe de Bézier linéaire
+	-- Requiert :
+	--   * 0 <= T <= 1
+	function Bezier_Lineaire(P0,P1: Point2D ; T: Float) return Point2D is
+	begin
+		return (1.0-T)*P0 + T*P1;
+	end;
+
+	-- Calcul des coordonnées d'un point d'une courbe de Bézier quadratique 
+	-- Requiert :
+	--   * 0 <= T <= 1
+	function Bezier_Quadratique(P0,P1,P2: Point2D ; T: Float) return Point2D is
+	begin
+		return (1.0-T)*Bezier_Lineaire(P0,P1,T) + T*Bezier_Lineaire(P1,P2,T);
+	end;
+	
+	-- Calcul des coordonnées d'un point d'une courbe de Bézier cubique 
+	-- Requiert :
+	--   * 0 <= T <= 1
+	function Bezier_Cubique(P0,P1,P2,P3: Point2D ; T: Float) return Point2D is
+	begin
+		return (1.0-T)*Bezier_Quadratique(P0,P1,P2,T) + T*Bezier_Quadratique(P1,P2,P3,T);
+	end;
+
 	procedure Bezier(P1, C1, C2, P2 : Point2D ; Nb_Points : Positive ;
 		Points : out Liste) is
 	begin
-		null;
+		Vider(Points);
+		for T in 0..Nb_Points-1 loop
+			Insertion_Tete(Points, Bezier_Cubique(P1,C1,C2,P2, Float(T)/Float(Nb_Points-1) ));
+		end loop;
 	end;
 
 	procedure Bezier(P1, C, P2 : Point2D ; Nb_Points : Positive ;
 		Points : out Liste) is
 	begin
-		null;
+		Vider(Points);
+		for T in 0..Nb_Points-1 loop
+			Insertion_Tete(Points, Bezier_Quadratique(P1,C,P2, Float(T)/Float(Nb_Points-1) ));
+		end loop;
 	end;
 end;

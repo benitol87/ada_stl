@@ -5,3 +5,8 @@
 # Fichiers SVG et STL
 *.stl
 *.svg
+
+# Résultats de la compilation
+*.ali
+*.o
+main

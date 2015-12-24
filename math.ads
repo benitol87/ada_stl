@@ -7,11 +7,43 @@ package Math is
 	package Liste_Points is new Liste_Generique(Point2D);
 	use Liste_Points;
 
-	-- convertit une courbe de Bezier cubique en segments
+	-- Calcul des coordonnées d'un point d'une courbe de Bézier linéaire
+	-- Requiert :
+	--   * 0 <= T <= 1
+	function Bezier_Lineaire(P0,P1: Point2D ; T: Float) return Point2D;
+
+	-- Calcul des coordonnées d'un point d'une courbe de Bézier quadratique 
+	-- Requiert :
+	--   * 0 <= T <= 1
+	function Bezier_Quadratique(P0,P1,P2: Point2D ; T: Float) return Point2D;
+
+	-- Calcul des coordonnées d'un point d'une courbe de Bézier cubique 
+	-- Requiert :
+	--   * 0 <= T <= 1
+	function Bezier_Cubique(P0,P1,P2,P3: Point2D ; T: Float) return Point2D;
+
+	-- Convertit une courbe de Bezier cubique en segments
+	-- P1 : Point de départ de la courbe
+	-- C1 : Point de contrôle au début de la courbe
+	-- C2 : Point de contrôle à la fin de la courbe
+	-- P2 : Point final de la courbe
+	-- Requiert : 
+	--   * Nb_Points >= 2
+	-- Assure :
+	--   * Points contient Nb_Points points appartenant à la
+	--   courbe de Bézier passée en paramètre
 	procedure Bezier(P1, C1, C2, P2 : Point2D ; Nb_Points : Positive ;
 		Points : out Liste);
 
-	-- convertit une courbe de Bezier quadratique en segments
+	-- Convertit une courbe de Bezier quadratique en segments
+	-- P1 : Point de départ de la courbe
+	-- C : Point de contrôle de la courbe
+	-- P2 : Point final de la courbe
+	-- Requiert : 
+	--   * Nb_Points >= 2
+	-- Assure :
+	--   * Points contient Nb_Points points appartenant à la
+	--   courbe de Bézier passée en paramètre
 	procedure Bezier(P1, C, P2 : Point2D ; Nb_Points : Positive ;
 		Points : out Liste);
 
