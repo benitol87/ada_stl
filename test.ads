@@ -1,0 +1,3 @@
+package Test is
+	-- assertEquals, true, ...	
+end;

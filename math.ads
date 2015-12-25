@@ -4,6 +4,7 @@ package Math is
 
 	type Vecteur is array(Positive range<>) of Float;
 	subtype Point2D is Vecteur(1..2);
+	subtype Point3D is Vecteur(1..3);
 	package Liste_Points is new Liste_Generique(Point2D);
 	use Liste_Points;
 
@@ -52,4 +53,11 @@ package Math is
 	function "+" (A : Vecteur ; B : Vecteur) return Vecteur;
 	-- multiplication scalaire vecteur
 	function "*" (Facteur : Float ; V : Vecteur) return Vecteur;
+
+	-- Transforme un point à 2 coordonnées (x,y) en un point à 3 coordonnées (x,y,0)
+	function To_Point3D(P: Point2D) return Point3D;
+
+	-- Prend P et effectue une rotation autour de l'axe X de Angle degrés
+	-- Renvoie le point obtenu après rotation
+	function Rotation_Axe_X(P: Point3D; Angle: Float) return Point3D;
 end;

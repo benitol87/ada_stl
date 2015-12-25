@@ -2,6 +2,7 @@ Packages à coder :
 	- liste_generique
 	- parser_svg
 	- stl
+	- fichier
 
 Packages à tester :
 	- math

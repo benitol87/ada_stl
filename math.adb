@@ -61,4 +61,23 @@ package body Math is
 			Insertion_Tete(Points, Bezier_Quadratique(P1,C,P2, Float(T)/Float(Nb_Points-1) ));
 		end loop;
 	end;
+
+	function To_Point3D(P: Point2D) return Point3D is
+		Res: Point3D;
+	begin
+		Res.X := P.X;
+		Res.Y := P.Y;
+		Res.Z := 0.0;
+		return Res;
+	end;
+
+	function Rotation_Axe_X(P: Point3D; Angle: Float) return Point3D is
+		Res: Point3D;
+	begin
+		Res.X := P.X;
+		--Res.Y := cos(Angle)*P.Y - sin(Angle)*P.Z;
+		--Res.Z := sin(Angle)*P.Y + cos(Angle)*P.Z;
+		return Res;
+	end;
+
 end;

@@ -3,7 +3,7 @@ with Math; use Math;
 
 package STL is
 	type Facette is record
-		P1, P2, P3 : Vecteur(1..3);
+		P1, P2, P3 : Point3D;
 	end record;
 
 	package Liste_Facettes is new Liste_Generique(Facette);

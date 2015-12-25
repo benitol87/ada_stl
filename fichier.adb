@@ -39,4 +39,22 @@ package body fichier is
 	begin
 		Close(Fic);
 	end;
+
+	function Trouver_Chaine_Fichier(Fic: File_Type; Chaine: String) return Boolean is
+		Indice: Integer := Chaine'First;
+	begin
+		while not End_Of_File(Fic) and then Indice <= Chaine'Last loop
+			if Lire_Caractere_Fichier(Fic) = Chaine(Indice) then
+				Indice := Indice + 1;
+			else
+				Indice := Chaine'First;
+			end if;
+		end loop;
+
+		if Indice = Chaine'Last+1 then
+			return True;
+		end if;
+
+		return False;
+	end;
 end;
