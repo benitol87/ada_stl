@@ -1,3 +1,6 @@
+with Ada.Numerics.Elementary_Functions;
+use Ada.Numerics.Elementary_Functions;
+
 package body Math is
 
 	function "+" (A : Vecteur ; B : Vecteur) return Vecteur is
@@ -65,18 +68,18 @@ package body Math is
 	function To_Point3D(P: Point2D) return Point3D is
 		Res: Point3D;
 	begin
-		Res.X := P.X;
-		Res.Y := P.Y;
-		Res.Z := 0.0;
+		Res(1) := P(1);
+		Res(2) := P(2);
+		Res(3) := 0.0;
 		return Res;
 	end;
 
 	function Rotation_Axe_X(P: Point3D; Angle: Float) return Point3D is
 		Res: Point3D;
 	begin
-		Res.X := P.X;
-		--Res.Y := cos(Angle)*P.Y - sin(Angle)*P.Z;
-		--Res.Z := sin(Angle)*P.Y + cos(Angle)*P.Z;
+		Res(1) := P(1);
+		Res(2) := Cos(X=>Angle,Cycle=>360.0)*P(2) - Sin(X=>Angle,Cycle=>360.0)*P(3);
+		Res(3) := Sin(X=>Angle,Cycle=>360.0)*P(2) + Cos(X=>Angle,Cycle=>360.0)*P(3);
 		return Res;
 	end;
 
