@@ -1,6 +1,7 @@
 with Ada.Text_IO;	use Ada.Text_IO;
+with Ada.Float_Text_IO;	use Ada.Float_Text_IO;
 
-package body fichier is
+package body Fichier is
 	procedure Ouvrir_Fichier_Ecriture(Fic: out File_Type; Nom_Fichier: String) is
 	begin
 		begin

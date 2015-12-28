@@ -1,4 +1,5 @@
 with Math; use Math;
+with Ada.Strings.Fixed; use Ada.Strings.Fixed;
 
 package Test is	
 	Assertion_Failed: Exception;
@@ -10,4 +11,7 @@ package Test is
 	procedure Assert_Equals(Actual,Expected: Vecteur);	
 	-- Lance une exception si la distance entre Actual et Expected est supérieure à EPSILON
 	procedure Assert_Equals(Actual,Expected: Float);
+
+	-- Enlève l'espace super utile devant les nombres flottants convertis en chaines de caractères
+	function Str_Float(Nombre: Float) return String;
 end;

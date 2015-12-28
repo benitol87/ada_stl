@@ -1,6 +1,6 @@
 with Ada.Text_IO;	use Ada.Text_IO;
 
-package fichier is
+package Fichier is
 	-- Contient des methodes pour gérer les fichiers
 
 	-- Procedure pour ouvrir un fichier en mode écriture seule. Si le fichier n'est pas trouvé, il sera créé
@@ -36,8 +36,9 @@ package fichier is
 	-- modifications soient prises en compte
 	procedure Fermer_Fichier(Fic: in out File_Type);
 
-	-- Parcourt Fic caractère par caractère jusqu'à trouver la chaine passée 
+	-- Parcourt Fic caractère par caractère jusqu'à trouver la chaine passée
 	-- en paramètre ou jusqu'à la fin du fichier
+	-- Commence à partir de la position actuelle du curseur du fichier
 	-- Renvoie True si la chaine a été trouvée, False sinon
 	-- Le curseur du fichier est placé de telle sorte que le prochain
 	-- caractère lu est celui qui suit la chaine passée en paramètre si
