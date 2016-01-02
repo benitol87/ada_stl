@@ -6,6 +6,8 @@ package STL is
 		P1, P2, P3 : Point3D;
 	end record;
 
+	NB_ROTATIONS: Integer := 16;
+
 	package Liste_Facettes is new Liste_Generique(Facette);
 
 	--prend une liste de segments et cree l'objet 3d par rotations
