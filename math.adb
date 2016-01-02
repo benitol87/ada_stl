@@ -50,7 +50,6 @@ package body Math is
 	procedure Bezier(P1, C1, C2, P2 : Point2D ; Nb_Points : Positive ;
 		Points : out Liste) is
 	begin
-		Vider(Points);
 		for T in 0..Nb_Points-1 loop
 			Insertion_Tete(Points, Bezier_Cubique(P1,C1,C2,P2, Float(T)/Float(Nb_Points-1) ));
 		end loop;
@@ -59,7 +58,6 @@ package body Math is
 	procedure Bezier(P1, C, P2 : Point2D ; Nb_Points : Positive ;
 		Points : out Liste) is
 	begin
-		Vider(Points);
 		for T in 0..Nb_Points-1 loop
 			Insertion_Tete(Points, Bezier_Quadratique(P1,C,P2, Float(T)/Float(Nb_Points-1) ));
 		end loop;

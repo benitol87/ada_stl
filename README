@@ -3,6 +3,10 @@ Packages à coder :
 	- parser_svg
 	- stl
 
+Plus tard peut-être
+	- Makefile
+	- fichier de config (nombre de points par courbe de bézier>=2, nombre de rotations effectuées>=3)
+
 Packages à tester :
 	- math (les 2 procedures qui ont besoin des listes)
 
