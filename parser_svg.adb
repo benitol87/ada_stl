@@ -1,6 +1,6 @@
 with Ada.Text_IO, Ada.Float_Text_IO;
 use Ada.Text_IO, Ada.Float_Text_IO;
-with Ada.Strings.Unbounded_String; use Ada.Strings.Unbounded_String;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 package body Parser_Svg is
 	Erreur_Chargement_Exception: Exception;
@@ -73,19 +73,19 @@ package body Parser_Svg is
 					Insertion_Tete(L,Point_Courant);
 					Commande_Precedente := 'H';
 				when 'h' =>
-					-- changer point courant (relatif)
+					-- Déplacement horizontal (relatif)
 					Lire_Caractere_Fichier(Fic); --passer l'espace qui suit
 					Point_Courant(1) := Point_Courant(1) + Lire_Float_Fichier(Fic);
 					Insertion_Tete(L,Point_Courant);
 					Commande_Precedente := 'h';
 				when 'V' =>
-					-- Line to, rajoute 1 point - abs
+					-- Déplacement vertical - abs
 					Lire_Caractere_Fichier(Fic); --passer l'espace qui suit
 					Point_Courant(2) := Lire_Float_Fichier(Fic);
 					Insertion_Tete(L,Point_Courant);
 					Commande_Precedente := 'V';
 				when 'v' =>
-					-- Line to, rajoute 1 point - rel
+					-- Déplacement vertical - rel
 					Lire_Caractere_Fichier(Fic); --passer l'espace qui suit
 					Point_Courant(2) := Point_Courant(2) + Lire_Float_Fichier(Fic);
 					Insertion_Tete(L,Point_Courant);
@@ -96,7 +96,7 @@ package body Parser_Svg is
 					P1 := Lire_Point(Fic);
 					Lire_Caractere_Fichier(Fic); --passer l'espace qui suit
 					P2 := Lire_Point(Fic);
-					Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER);
+					Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER,Liste_Temp);
 					Fusion(L,Liste_Temp);
 					Commande_Precedente := 'Q';
 				when 'q' =>
@@ -105,7 +105,7 @@ package body Parser_Svg is
 					P1 := Lire_Point(Fic) + Point_Courant;
 					Lire_Caractere_Fichier(Fic); --passer l'espace qui suit
 					P2 := Lire_Point(Fic) + Point_Courant;
-					Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER);
+					Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER,Liste_Temp);
 					Fusion(L,Liste_Temp);
 					Commande_Precedente := 'q';
 				when 'C' =>
@@ -116,7 +116,7 @@ package body Parser_Svg is
 					P2 := Lire_Point(Fic);
 					Lire_Caractere_Fichier(Fic); --passer l'espace qui suit
 					P3 := Lire_Point(Fic);
-					Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER);
+					Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER,Liste_Temp);
 					Fusion(L,Liste_Temp);
 					Commande_Precedente := 'C';
 				when 'c' =>
@@ -127,11 +127,11 @@ package body Parser_Svg is
 					P2 := Lire_Point(Fic) + Point_Courant;
 					Lire_Caractere_Fichier(Fic); --passer l'espace qui suit
 					P3 := Lire_Point(Fic) + Point_Courant;
-					Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER);
+					Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER,Liste_Temp);
 					Fusion(L,Liste_Temp);
 					Commande_Precedente := 'c';
 				when others =>
-					Put_Line(Standard_Error, "Erreur, commande path non reconnue : " & Caractere_Lu);
+					Put_Line(Standard_Error, "Erreur, commande de path non reconnue : " & Caractere_Lu);
 			end case;
 			Lire_Caractere_Fichier(Fic); -- passer l'espace
 			Caractere_Lu := Lire_Caractere_Fichier(Fic);

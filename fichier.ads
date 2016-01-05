@@ -21,6 +21,14 @@ package Fichier is
 	--	End_Of_File(Fic) = False
 	function Lire_Caractere_Fichier(Fic: File_Type) return Character;
 
+    -- Procedure qui passe un caractère dans Fic sans le retourner
+	-- Avance donc le curseur de lecture du fichier d'un caractère
+	-- Requiert :
+	-- 	Fic a été ouvert en mode lecture 
+	--	End_Of_File(Fic) = False
+	procedure Lire_Caractere_Fichier(Fic: File_Type);
+
+
 	-- Fonction qui lit un nombre flottant dans Fic
 	-- Place le curseur du fichier sur le caractère qui suit le nombre lu
 	-- Requiert :

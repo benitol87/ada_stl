@@ -1,5 +1,6 @@
 with Liste_Generique;
 with Math; use Math;
+with Fichier; use Fichier;
 
 package STL is
 	type Facette is record
