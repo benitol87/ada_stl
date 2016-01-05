@@ -27,7 +27,7 @@ package body Parser_Svg is
 		Ouvrir_Fichier_Lecture(Fic,Nom_Fichier);
 		
 		-- On parcourt le fichier et on s'arrête après la première balise path puis on cherche l'attribut d
-		if not Trouver_Chaine_Fichier(Fic,"<path") or else Trouver_Chaine_Fichier(Fic,"d=""")  then
+		if not Trouver_Chaine_Fichier(Fic,"<path") or else not Trouver_Chaine_Fichier(Fic,"d=""")  then
 			Put_Line(Standard_Error, "Erreur, pas de balises path dans le fichier SVG ou bien pas d'attribut d");
 			raise Erreur_Chargement_Exception;
 		end if;
@@ -42,13 +42,13 @@ package body Parser_Svg is
 					-- while not virgule etc
 					-- TODO
 					null;
-				when 'M' =>
+				when 'M' => -- TODO Même comportement que L
 					-- changer point courant (absolu)
 					Lire_Caractere_Fichier(Fic); --passer l'espace qui suit
 					Point_Courant := Lire_Point(Fic);
 					Insertion_Tete(L,Point_Courant);
 					Commande_Precedente := 'L'; -- exception pour la commande M
-				when 'm' =>
+				when 'm' => -- TODO même comportement que l
 					-- changer point courant (relatif)
 					Lire_Caractere_Fichier(Fic); --passer l'espace qui suit
 					Point_Courant := Point_Courant + Lire_Point(Fic);

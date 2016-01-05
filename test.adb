@@ -1,3 +1,5 @@
+with Ada.Text_IO; use Ada.Text_IO;
+
 package body Test is
 	procedure Assert_Equals(Actual,Expected: Vecteur) is
 	begin
@@ -10,10 +12,27 @@ package body Test is
 		end loop;
 	end;
 
+    procedure Assert_Equals(Actual,Expected: String) is
+    begin
+        if Actual /= Expected then
+            Put_Line("Erreur de test: '" & Expected & "' attendu, '" & Actual & "' obtenu");
+            raise Assertion_Failed;
+        end if;
+    end;
+
+    procedure Assert_Equals(Actual,Expected: Natural) is
+    begin
+        if Actual /= Expected then
+            Put_Line("Erreur de test: '" & Natural'Image(Expected) & "' attendu, '" & Natural'Image(Actual) & "' obtenu");
+            raise Assertion_Failed;
+        end if;
+    end;
+
 	procedure Assert_Equals(Actual,Expected: Float) is
 	begin
 		if (Actual - Expected > EPSILON) or else (Actual - Expected < -EPSILON) then
-			raise Assertion_Failed;
+			Put_Line("Erreur de test: '" & Str_Float(Expected) & "' attendu, '" & Str_Float(Actual) & "' obtenu");
+            raise Assertion_Failed;
 		end if;
 	end;
 
