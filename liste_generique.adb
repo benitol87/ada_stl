@@ -2,41 +2,50 @@ with Ada.Unchecked_Deallocation;
 
 package body Liste_Generique is
 
-   procedure Liberer is new Ada.Unchecked_Deallocation(Cellule,Liste);
+   procedure Liberer is new Ada.Unchecked_Deallocation(Cellule,Pointeur);
    	-- procedue que j'ai ajouté
 
    procedure Vider(L : in out Liste) is
    	-- pas encore testé mais ça va probablement buguer !!!
-   	Cour : Pointeur ; 
+   	Cour : Pointeur ;
+   	Precedent : Pointeur ; 
    begin
    	Cour := L.Debut ;
    	if Cour = null then
    		return ;
    		-- Cas où L est vide : rien à faire
-   	L.Debut := null ;
-   	Liberer(Cour,L) ;
-   	end if ;
-   	while Cour.Suivant /= null loop
+   	end if;
+   	while Cour /= null loop
+   		Precedent := Cour ;
    		Cour := Cour.Suivant ;
-   		Liberer(Cour,L);
+   		Liberer(Precedent);
 	end loop ;
+	L.Debut := null ;
 	L.Fin := null ;
 	L.Taille := 0 ;
    end;
 
    procedure Insertion_Tete(L : in out Liste ; E : Element) is
+   	Cour : Pointeur ;
    begin
-      Cour := new Cellule(E,L.Debut);
+      Cour := new Cellule'(E,L.Debut);
+      if L.Debut = null then
+      	L.Fin := Cour ;
+      end if ;
       L.Debut := Cour ;
       L.Taille := L.Taille + 1 ;
    end;
 
    procedure Insertion_Queue(L : in out Liste ; E : Element) is
-   	Cour1 : Pointeur ;
+   	Cour : Pointeur ;
    begin
-      	Cour1 := L.Fin ;
-      	Cour := new Cellule(E, null);
-      	Cour1.Suivant := Cour ;
+      	Cour := new Cellule'(E, null);
+      	
+      	if L.Debut = null then
+   		L.Debut := Cour;
+   	else
+   		L.Fin.Suivant := Cour ;
+   	end if;
       	L.Fin := Cour ;
       	L.Taille := L.Taille + 1 ;
    end;
@@ -58,9 +67,9 @@ package body Liste_Generique is
    		return ;
    	end if ;
    	Cour := L.Debut ;
-   	while Cour.Suiv /= null loop
-   		Traiter(Cour, Cour.Suiv);
-   		Cour := Cour.Suiv ;
+   	while Cour.Suivant /= null loop
+   		Traiter(Cour.Contenu, Cour.Suivant.Contenu);
+   		Cour := Cour.Suivant ;
    	end loop ;
    end;
 
@@ -69,11 +78,11 @@ package body Liste_Generique is
    	Cour : Pointeur ;
    begin
    	-- Cas de L2 vide : rien à faire
-   	if L2.Tete = null then
+   	if L2.Debut = null then
    		return ;
    	end if ;
    	-- Cas de L1 Vide
-   	if L1.Tete = null then
+   	if L1.Debut = null then
    		L1.Debut := L2.Debut ;
    		L1.Fin := L2.Fin ;
    		L1.Taille := L2.Taille ;
@@ -81,7 +90,7 @@ package body Liste_Generique is
    		return ;
    	end if ;
    	Cour := L1.Fin;
-   	Cour.Suiv := L2.Debut ;
+   	Cour.Suivant := L2.Debut ;
    	L1.Taille := L1.Taille + L2.Taille ;
    	L1.Fin := L2.Fin ;
    	Vider(L2);
