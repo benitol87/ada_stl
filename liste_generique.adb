@@ -86,18 +86,19 @@ package body Liste_Generique is
    		L1.Debut := L2.Debut ;
    		L1.Fin := L2.Fin ;
    		L1.Taille := L2.Taille ;
-   		Vider(L2);
    		return ;
    	end if ;
    	Cour := L1.Fin;
    	Cour.Suivant := L2.Debut ;
    	L1.Taille := L1.Taille + L2.Taille ;
    	L1.Fin := L2.Fin ;
-   	Vider(L2);
+   	L2.Debut := null ;
+   	L2.Fin := null ;
+   	L2.Taille := 0;
    	
    end;
 
-   -- fin des prodésures à compléter
+   -- fin des procédures à compléter
 
    function Taille(L : Liste) return Natural is
    begin
