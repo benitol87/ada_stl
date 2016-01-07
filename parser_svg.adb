@@ -19,7 +19,7 @@ package body Parser_Svg is
         function Lire_Float(Chaine: String; Indice: in out Integer) return Float is
             Nombre: Unbounded_String := To_Unbounded_String("");
         begin
-            while Chaine(Indice) /= ',' and then Chaine(Indice) /= ' ' loop
+            while Indice <= Chaine'Last and then Chaine(Indice) /= ',' and then Chaine(Indice) /= ' ' loop
                 Nombre := Nombre & Chaine(Indice);
                 Indice := Indice+1;
             end loop;
@@ -37,6 +37,7 @@ package body Parser_Svg is
         end;
 
     begin
+        -- ********* A mettre dans une fonction à part ******************
         Ouvrir_Fichier_Lecture(Fic,Nom_Fichier);
 
         -- On parcourt le fichier et on s'arrête après la première balise path puis on cherche l'attribut d
@@ -55,6 +56,7 @@ package body Parser_Svg is
 
         -- On a lu ce qu'on voulait lire
         Fermer_Fichier(Fic);
+        -- ************* Fin du truc à mettre à part *****************
 
         Indice := 1;
 
@@ -68,7 +70,6 @@ package body Parser_Svg is
         while Indice<=Length(Chemin) loop
             if not (Element(Chemin, Indice) in '0'..'9') and then Element(Chemin, Indice) /= '-' then -- Ici Element(Chemin, Indice) est une lettre => nouvelle commande
                 Commande := Element(Chemin, Indice);
-                Put_Line("Commande : " & Commande);
                 Indice := Indice + 2; -- Pour passer l'espace qui suit
             end if;
 
@@ -116,11 +117,8 @@ package body Parser_Svg is
                     P1 := Lire_Point(To_String(Chemin),Indice);
                     P2 := Lire_Point(To_String(Chemin),Indice);
                     P3 := Lire_Point(To_String(Chemin),Indice);
-                    Put_Line("Points récupérés");
                     Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER,Liste_Temp);
-                    Put_Line("Bezier fini");
                     Fusion(L,Liste_Temp);
-                    Put_Line("Fusion finie");
                 when 'c' =>
                     -- bezier cubique, rajoute N point - rel
                     P1 := Lire_Point(To_String(Chemin),Indice) + Point_Courant;
