@@ -24,12 +24,6 @@ package body Fichier is
 		return C;
 	end;
 
-    procedure Lire_Caractere_Fichier(Fic: File_Type) is
-        C: Character;
-    begin
-        Get(Fic,C);
-    end;
-
 	function Lire_Float_Fichier(Fic: File_Type) return Float is
 		Nombre: Float;
 	begin

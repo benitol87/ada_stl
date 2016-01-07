@@ -1,6 +1,5 @@
 Packages à coder :
-	- liste_generique
-	- parser_svg (xmin,ymin,répétition de commandes)
+	- parser_svg (xmin,ymin)
 
 Plus tard peut-être
 	- Makefile
@@ -9,7 +8,9 @@ Plus tard peut-être
 Packages à tester :
 	- math (les 2 procedures qui ont besoin des listes)
 	- stl
+    - parser_svg
+    - liste_generique
 
-Terminés?
+Terminés
 	- fichier
 	- test

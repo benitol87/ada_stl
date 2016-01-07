@@ -8,7 +8,7 @@ with Ada.Characters.Latin_1;
 
 package body STL is
 	CRLF: constant String := Ada.Characters.Latin_1.CR & Ada.Characters.Latin_1.LF;
-    TAB: constant Character := Ada.Characters.Latin_1.HT;
+    TAB: constant String := "  ";
 
 	procedure Creation(Segments : in out Liste_Points.Liste ;
 		Facettes :    out Liste_Facettes.Liste) is
@@ -57,16 +57,16 @@ package body STL is
         procedure Traiter_Facette(F: in out Facette) is
 			procedure Ecrire_Point(P:Point3D) is
 			begin
-				Ecrire_Fichier(Fic, TAB & TAB & Tab & "vertex " & Float'Image(P(1)) & " " & Float'Image(P(2)) & " " & Float'Image(P(3)) & CRLF);
+				Ecrire_Fichier(Fic, TAB & Tab & "vertex " & Float'Image(P(1)) & " " & Float'Image(P(2)) & " " & Float'Image(P(3)) & CRLF);
 			end;
 		begin
-			Ecrire_Fichier(Fic, TAB & "facet" & CRLF);
-			Ecrire_Fichier(Fic, TAB & TAB & "outer loop" & CRLF);
+			Ecrire_Fichier(Fic, "facet" & CRLF);
+			Ecrire_Fichier(Fic, TAB & "outer loop" & CRLF);
 			Ecrire_Point(F.P1);
 			Ecrire_Point(F.P2);
 			Ecrire_Point(F.P3);
-			Ecrire_Fichier(Fic, TAB & TAB & "endloop" & CRLF);
-			Ecrire_Fichier(Fic, TAB & "endfacet" & CRLF);
+			Ecrire_Fichier(Fic, TAB & "endloop" & CRLF);
+			Ecrire_Fichier(Fic, "endfacet" & CRLF);
 
 		end;
         
