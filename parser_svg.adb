@@ -18,7 +18,7 @@ package body Parser_Svg is
                 Y_Min := P(2);
                 return;
             end if;
-            
+
             if P(1) < X_Min then
                 X_Min := P(1);
             end if;
@@ -41,6 +41,17 @@ package body Parser_Svg is
         Translater(L);
     end;
 
+    function Lire_Float(Chaine: String; Indice: in out Integer) return Float is
+        Nombre: Unbounded_String := To_Unbounded_String("");
+    begin
+        while Indice <= Chaine'Last and then Chaine(Indice) /= ',' and then Chaine(Indice) /= ' ' loop
+            Nombre := Nombre & Chaine(Indice);
+            Indice := Indice+1;
+        end loop;
+        Indice := Indice+1; -- On passe l'espace ou la virgule
+        return Float'Value(To_String(Nombre));
+    end;
+
     procedure Chargement_Bezier(Nom_Fichier : String; L : out Liste) is
         Fic: File_Type;
         Caractere_Lu: Character;
@@ -50,17 +61,6 @@ package body Parser_Svg is
         P1,P2,P3: Point2D;
         Liste_Temp: Liste;
         Indice: Integer; 
-
-        function Lire_Float(Chaine: String; Indice: in out Integer) return Float is
-            Nombre: Unbounded_String := To_Unbounded_String("");
-        begin
-            while Indice <= Chaine'Last and then Chaine(Indice) /= ',' and then Chaine(Indice) /= ' ' loop
-                Nombre := Nombre & Chaine(Indice);
-                Indice := Indice+1;
-            end loop;
-            Indice := Indice+1; -- On passe l'espace ou la virgule
-            return Float'Value(To_String(Nombre));
-        end;
 
         -- Fonction servant à lire les coordonnées d'un point 2D dans un fichier ouvert en mode lecture
         function Lire_Point(Chaine: String;Indice: in out Integer) return Point2D is
@@ -133,26 +133,30 @@ package body Parser_Svg is
                     P2 := Lire_Point(To_String(Chemin),Indice);
                     Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER,Liste_Temp);
                     Fusion(L,Liste_Temp);
+                    Point_Courant := P2;
                 when 'q' =>
                     -- bezier quadra, rajoute N point - rel
                     P1 := Lire_Point(To_String(Chemin),Indice) + Point_Courant;
                     P2 := Lire_Point(To_String(Chemin),Indice) + Point_Courant;
                     Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER,Liste_Temp);
                     Fusion(L,Liste_Temp);
+                    Point_Courant := P2;
                 when 'C' =>
                     -- bezier quadra, rajoute N point - abs
                     P1 := Lire_Point(To_String(Chemin),Indice);
                     P2 := Lire_Point(To_String(Chemin),Indice);
                     P3 := Lire_Point(To_String(Chemin),Indice);
-                    Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER,Liste_Temp);
+                    Bezier(Point_Courant,P1,P2,P3,NB_POINTS_BEZIER,Liste_Temp);
                     Fusion(L,Liste_Temp);
+                    Point_Courant := P3;
                 when 'c' =>
                     -- bezier cubique, rajoute N point - rel
                     P1 := Lire_Point(To_String(Chemin),Indice) + Point_Courant;
                     P2 := Lire_Point(To_String(Chemin),Indice) + Point_Courant;
                     P3 := Lire_Point(To_String(Chemin),Indice) + Point_Courant;
-                    Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER,Liste_Temp);
+                    Bezier(Point_Courant,P1,P2,P3,NB_POINTS_BEZIER,Liste_Temp);
                     Fusion(L,Liste_Temp);
+                    Point_Courant := P3;
                 when others =>
                     Put_Line(Standard_Error, "Erreur, commande de path non reconnue : " & Element(Chemin, Indice));
                     raise Erreur_Chargement_Exception;
