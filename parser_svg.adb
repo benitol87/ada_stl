@@ -3,7 +3,43 @@ use Ada.Text_IO, Ada.Float_Text_IO;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 package body Parser_Svg is
-    Erreur_Chargement_Exception: Exception; 
+    Erreur_Chargement_Exception: Exception;
+
+    -- Cherche les minima pour x et y et fait une translation de (-xmin,-ymin)
+    procedure Translater_Liste(L: in out liste) is
+        X_Min,Y_Min: Float;
+        Premier_Point: Boolean := True;
+
+        procedure Test_Point(P: in out Point2D) is
+        begin
+            if Premier_Point then
+                Premier_Point := False;
+                X_Min := P(1);
+                Y_Min := P(2);
+                return;
+            end if;
+            
+            if P(1) < X_Min then
+                X_Min := P(1);
+            end if;
+
+            if P(2) < Y_Min then
+                Y_Min := P(2);
+            end if;
+        end;
+
+        procedure Translater_Point(P: in out Point2D) is
+        begin
+            P(1) := P(1) - X_Min;
+            P(2) := P(2) - Y_Min;
+        end;
+
+        procedure Chercher_Minima is new Parcourir(Traiter=>Test_Point);
+        procedure Translater is new Parcourir(Traiter=>Translater_Point);
+    begin
+        Chercher_Minima(L);
+        Translater(L);
+    end;
 
     procedure Chargement_Bezier(Nom_Fichier : String; L : out Liste) is
         Fic: File_Type;
@@ -14,7 +50,6 @@ package body Parser_Svg is
         P1,P2,P3: Point2D;
         Liste_Temp: Liste;
         Indice: Integer; 
-        X_Min, Y_Min: Float := 0.0;
 
         function Lire_Float(Chaine: String; Indice: in out Integer) return Float is
             Nombre: Unbounded_String := To_Unbounded_String("");
@@ -59,14 +94,6 @@ package body Parser_Svg is
         -- ************* Fin du truc à mettre à part *****************
 
         Indice := 1;
-
-        -- Lecture du premier point
-        Commande := Element(Chemin, Indice);
-        Indice := Indice+2;
-        Point_Courant := Lire_Point(To_String(Chemin),Indice);
-        X_Min := Point_Courant(1);
-        Y_Min := Point_Courant(2);
-
         while Indice<=Length(Chemin) loop
             if not (Element(Chemin, Indice) in '0'..'9') and then Element(Chemin, Indice) /= '-' then -- Ici Element(Chemin, Indice) est une lettre => nouvelle commande
                 Commande := Element(Chemin, Indice);
@@ -132,7 +159,7 @@ package body Parser_Svg is
             end case;
         end loop;
 
-        -- TODO translater de (-xmin,-ymin) 
+        Translater_Liste(L);
     end;
 
 end;
