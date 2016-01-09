@@ -41,7 +41,7 @@ package body Parser_Svg is
         Translater(L);
     end;
 
-    function Lire_Float(Chaine: String; Indice: in out Integer) return Float is
+    procedure Lire_Float(Chaine: String; Indice: in out Integer; F: out Float) is
         Nombre: Unbounded_String := To_Unbounded_String("");
     begin
         while Indice <= Chaine'Last and then Chaine(Indice) /= ',' and then Chaine(Indice) /= ' ' loop
@@ -49,7 +49,7 @@ package body Parser_Svg is
             Indice := Indice+1;
         end loop;
         Indice := Indice+1; -- On passe l'espace ou la virgule
-        return Float'Value(To_String(Nombre));
+        F := Float'Value(To_String(Nombre));
     end;
 
     procedure Chargement_Bezier(Nom_Fichier : String; L : out Liste) is
@@ -59,16 +59,18 @@ package body Parser_Svg is
         Commande: Character;
         Point_Courant: Point2D := (0.0,0.0);
         P1,P2,P3: Point2D;
+		F: Float;
         Liste_Temp: Liste;
         Indice: Integer; 
 
         -- Fonction servant à lire les coordonnées d'un point 2D dans un fichier ouvert en mode lecture
-        function Lire_Point(Chaine: String;Indice: in out Integer) return Point2D is
-            Res: Point2D;
-        begin
-            Res(1) := Lire_Float(Chaine,Indice);
-            Res(2) := Lire_Float(Chaine,Indice);
-            return Res;
+        procedure Lire_Point(Chaine: String;Indice: in out Integer; P: out Point2D) is
+			F: Float;
+		begin
+            Lire_Float(Chaine,Indice,F);
+			P(1) := F;
+            Lire_Float(Chaine,Indice,F);
+			P(2) := F;
         end;
 
     begin
@@ -105,55 +107,65 @@ package body Parser_Svg is
                     -- donc a priori la commande M n'est même pas censée apparaitre plus d'une fois
                 when 'L' | 'M' =>
                     -- Line to, abs
-                    Point_Courant := Lire_Point(To_String(Chemin),Indice);
+                    Lire_Point(To_String(Chemin),Indice,Point_Courant);
                     Insertion_Tete(L,Point_Courant);
                 when 'l' | 'm' => 
                     -- Line to, rel
-                    Point_Courant := Point_Courant + Lire_Point(To_String(Chemin),Indice);
+					Lire_Point(To_String(Chemin),Indice,P1);
+                    Point_Courant := Point_Courant + P1; 
                     Insertion_Tete(L,Point_Courant);
                 when 'H' =>
                     -- Déplacement horizontal (absolu)
-                    Point_Courant(1) := Lire_Float(To_String(Chemin),Indice);
+					Lire_Float(To_String(Chemin),Indice,F);
+                    Point_Courant(1) := F;
                     Insertion_Tete(L,Point_Courant);
                 when 'h' =>
                     -- Déplacement horizontal (relatif)
-                    Point_Courant(1) := Point_Courant(1) + Lire_Float(To_String(Chemin),Indice);
+					Lire_Float(To_String(Chemin),Indice,F);
+                    Point_Courant(1) := Point_Courant(1) + F;
                     Insertion_Tete(L,Point_Courant);
                 when 'V' =>
                     -- Déplacement vertical - abs
-                    Point_Courant(2) := Lire_Float(To_String(Chemin),Indice);
+					Lire_Float(To_String(Chemin),Indice,F);
+                    Point_Courant(2) := F;
                     Insertion_Tete(L,Point_Courant);
                 when 'v' =>
                     -- Déplacement vertical - rel
-                    Point_Courant(2) := Point_Courant(2) + Lire_Float(To_String(Chemin),Indice);
+					Lire_Float(To_String(Chemin),Indice,F);
+                    Point_Courant(2) := Point_Courant(2) + F;
                     Insertion_Tete(L,Point_Courant);
                 when 'Q' =>
                     -- bezier quadra, rajoute N point - abs
-                    P1 := Lire_Point(To_String(Chemin),Indice);
-                    P2 := Lire_Point(To_String(Chemin),Indice);
+                    Lire_Point(To_String(Chemin),Indice,P1);
+                    Lire_Point(To_String(Chemin),Indice,P2);
                     Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER,Liste_Temp);
                     Fusion(L,Liste_Temp);
                     Point_Courant := P2;
                 when 'q' =>
                     -- bezier quadra, rajoute N point - rel
-                    P1 := Lire_Point(To_String(Chemin),Indice) + Point_Courant;
-                    P2 := Lire_Point(To_String(Chemin),Indice) + Point_Courant;
+                    Lire_Point(To_String(Chemin),Indice,P1);
+					P1 := P1 + Point_Courant;
+                    Lire_Point(To_String(Chemin),Indice,P2);
+				    P2 := P2 + Point_Courant;
                     Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER,Liste_Temp);
                     Fusion(L,Liste_Temp);
                     Point_Courant := P2;
                 when 'C' =>
                     -- bezier quadra, rajoute N point - abs
-                    P1 := Lire_Point(To_String(Chemin),Indice);
-                    P2 := Lire_Point(To_String(Chemin),Indice);
-                    P3 := Lire_Point(To_String(Chemin),Indice);
+                    Lire_Point(To_String(Chemin),Indice,P1);
+                    Lire_Point(To_String(Chemin),Indice,P2);
+                    Lire_Point(To_String(Chemin),Indice,P3);
                     Bezier(Point_Courant,P1,P2,P3,NB_POINTS_BEZIER,Liste_Temp);
                     Fusion(L,Liste_Temp);
                     Point_Courant := P3;
                 when 'c' =>
                     -- bezier cubique, rajoute N point - rel
-                    P1 := Lire_Point(To_String(Chemin),Indice) + Point_Courant;
-                    P2 := Lire_Point(To_String(Chemin),Indice) + Point_Courant;
-                    P3 := Lire_Point(To_String(Chemin),Indice) + Point_Courant;
+                    Lire_Point(To_String(Chemin),Indice,P1);
+				    P1 := P1 + Point_Courant;
+                    Lire_Point(To_String(Chemin),Indice,P2);
+				    P2 := P2 + Point_Courant;
+                    Lire_Point(To_String(Chemin),Indice,P3);
+					P3 := P3 + Point_Courant;
                     Bezier(Point_Courant,P1,P2,P3,NB_POINTS_BEZIER,Liste_Temp);
                     Fusion(L,Liste_Temp);
                     Point_Courant := P3;
