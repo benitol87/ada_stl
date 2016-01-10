@@ -108,32 +108,32 @@ package body Parser_Svg is
                 when 'L' | 'M' =>
                     -- Line to, abs
                     Lire_Point(To_String(Chemin),Indice,Point_Courant);
-                    Insertion_Tete(L,Point_Courant);
+                    Insertion_Queue(L,Point_Courant);
                 when 'l' | 'm' => 
                     -- Line to, rel
 					Lire_Point(To_String(Chemin),Indice,P1);
                     Point_Courant := Point_Courant + P1; 
-                    Insertion_Tete(L,Point_Courant);
+                    Insertion_Queue(L,Point_Courant);
                 when 'H' =>
                     -- Déplacement horizontal (absolu)
 					Lire_Float(To_String(Chemin),Indice,F);
                     Point_Courant(1) := F;
-                    Insertion_Tete(L,Point_Courant);
+                    Insertion_Queue(L,Point_Courant);
                 when 'h' =>
                     -- Déplacement horizontal (relatif)
 					Lire_Float(To_String(Chemin),Indice,F);
                     Point_Courant(1) := Point_Courant(1) + F;
-                    Insertion_Tete(L,Point_Courant);
+                    Insertion_Queue(L,Point_Courant);
                 when 'V' =>
                     -- Déplacement vertical - abs
 					Lire_Float(To_String(Chemin),Indice,F);
                     Point_Courant(2) := F;
-                    Insertion_Tete(L,Point_Courant);
+                    Insertion_Queue(L,Point_Courant);
                 when 'v' =>
                     -- Déplacement vertical - rel
 					Lire_Float(To_String(Chemin),Indice,F);
                     Point_Courant(2) := Point_Courant(2) + F;
-                    Insertion_Tete(L,Point_Courant);
+                    Insertion_Queue(L,Point_Courant);
                 when 'Q' =>
                     -- bezier quadra, rajoute N point - abs
                     Lire_Point(To_String(Chemin),Indice,P1);

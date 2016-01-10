@@ -20,6 +20,32 @@ gnatmake -q test_fichier.adb
 rm test_fichier fichier.svg
 echo ""
 
+# Test du package STL
+echo " ** Début du test du package STL **"
+gnatmake -q test_stl.adb
+./test_stl
+rm test_stl
+echo ""
+
+# Test du package Parser_SVG
+echo " ** Début du test du package Parser_SVG **"
+gnatmake -q test_parser.adb
+./test_parser
+rm test_parser
+echo ""
+
+# Test du programme principal
+echo " ** Début du test du programme **"
+gnatmake -q main.adb
+for fic in $(cd svg && ls *.svg)
+do
+	fic="${fic%.svg}"
+	./main "svg/${fic}.svg" "stl/${fic}.stl"
+	echo "Fichier stl/${fic} créé"
+done
+rm main
+echo ""
+
 # Fin des tests
 rm *.o *.ali
 

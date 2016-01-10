@@ -8,7 +8,7 @@ with Ada.Characters.Latin_1;
 
 package body STL is
 	CRLF: constant String := Ada.Characters.Latin_1.CR & Ada.Characters.Latin_1.LF;
-    TAB: constant String := "  ";
+	TAB: constant String := "  ";
 
 	procedure Creation(Segments : in out Liste_Points.Liste ;
 		Facettes :    out Liste_Facettes.Liste) is
@@ -43,18 +43,20 @@ package body STL is
 				Haut := Haut_Suiv;
 				Bas := Bas_Suiv;
 			end loop;
+
+			Liste_Points.Vider(Segments);
 		end;
-        
-        procedure Parcours is new Liste_Points.Parcourir_Par_Couples(Traiter=>Traiter_Segment);
+
+		procedure Parcours is new Liste_Points.Parcourir_Par_Couples(Traiter=>Traiter_Segment);
 	begin
 		Parcours(Segments);	
 	end;
 
 	procedure Sauvegarder(Nom_Fichier : String ;
-		Facettes : Liste_Facettes.Liste) is
+		Facettes : in out Liste_Facettes.Liste) is
 		Fic: File_Type;
-		
-        procedure Traiter_Facette(F: in out Facette) is
+
+		procedure Traiter_Facette(F: in out Facette) is
 			procedure Ecrire_Point(P:Point3D) is
 			begin
 				Ecrire_Fichier(Fic, TAB & Tab & "vertex " & Float'Image(P(1)) & " " & Float'Image(P(2)) & " " & Float'Image(P(3)) & CRLF);
@@ -69,13 +71,15 @@ package body STL is
 			Ecrire_Fichier(Fic, "endfacet" & CRLF);
 
 		end;
-        
-        procedure Parcours is new Liste_Facettes.Parcourir(Traiter=>Traiter_Facette);
+
+		procedure Parcours is new Liste_Facettes.Parcourir(Traiter=>Traiter_Facette);
+
 	begin
 		Ouvrir_Fichier_Ecriture(Fic, Nom_Fichier);
 		Ecrire_Fichier(Fic,"solid s" & CRLF);
 		Parcours(Facettes);
 		Ecrire_Fichier(Fic,"endsolid s");
 		Fermer_Fichier(Fic);
+		Liste_Facettes.Vider(Facettes);
 	end;
 end;

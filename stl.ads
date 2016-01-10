@@ -17,5 +17,5 @@ package STL is
 
 	--sauvegarde le fichier stl
 	procedure Sauvegarder(Nom_Fichier : String ;
-		Facettes : Liste_Facettes.Liste);
+		Facettes : in out Liste_Facettes.Liste);
 end;

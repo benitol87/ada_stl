@@ -21,4 +21,7 @@ package Test is
 	
     -- Enlève l'espace super utile devant les nombres flottants convertis en chaines de caractères
 	function Str_Float(Nombre: Float) return String;
+
+	-- Enlève l'espace super utile devant les nombres relatifs convertis en chaines de caractères
+	function Str_Integer(Nombre: Integer) return String;
 end;

@@ -40,4 +40,9 @@ package body Test is
 	begin
 		return Trim(Float'Image(Nombre), Ada.Strings.Left);
 	end;
+
+	function Str_Integer(Nombre: Integer) return String is
+	begin
+		return Trim(Integer'Image(Nombre), Ada.Strings.Left);
+	end;
 end;

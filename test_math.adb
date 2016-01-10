@@ -95,20 +95,6 @@ procedure Test_Math is
 			raise Test_Failed;
 	end;
 
-	procedure Test_BezierCub is
-	begin
-		-- TODO (nécessite le package listes)
-		-- SVG, line, path
-		null;
-	end;
-
-	procedure Test_BezierQuad is
-	begin
-		-- TODO (nécessite le package listes)
-		-- SVG, line, path
-		null;
-	end;
-
 	-- Compare une courbe de Bézier cubique avec les points
 	-- dont les coordonnées sont calculées 
 	procedure Test_Bezier_Cubique is
@@ -210,6 +196,4 @@ begin
 	Test_Bezier_Lineaire;
 	Test_Bezier_Quadratique;
 	Test_Bezier_Cubique;
-	Test_BezierCub;
-	Test_BezierQuad;
 end;
