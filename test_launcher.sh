@@ -1,10 +1,9 @@
 cd $(dirname $0)
 
 # Début des tests
-TESTS="tests"
-SVG="$TESTS/svg"
-STL="$TESTS/stl"
-mkdir -p $TESTS $SVG $STL
+SVG="svg"
+STL="stl"
+mkdir -p $SVG $STL
 
 # Test du package Math
 echo " ** Début du test du package Math **"
