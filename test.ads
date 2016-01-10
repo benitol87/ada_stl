@@ -16,8 +16,11 @@ package Test is
     -- Test l'égalité entre deux chaines de caractères et lance une exception si celles-ci sont différentes
     procedure Assert_Equals(Actual,Expected: String);
 
-    -- Test l'égalité entre deux entiers naturels et lance une exception si ceux-ci sont différents
-    procedure Assert_Equals(Actual,Expected: Natural);
+    -- Test l'égalité entre deux caractères et lance une exception si ceux-ci sont différents
+    procedure Assert_Equals(Actual,Expected: Character);
+
+    -- Test l'égalité entre deux entiers relatifs et lance une exception si ceux-ci sont différents
+    procedure Assert_Equals(Actual,Expected: Integer);
 	
     -- Enlève l'espace super utile devant les nombres flottants convertis en chaines de caractères
 	function Str_Float(Nombre: Float) return String;

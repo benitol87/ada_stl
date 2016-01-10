@@ -13,6 +13,19 @@ gnatmake -q test_math.adb
 rm test_math
 echo ""
 
+# Test du package Liste
+echo " ** Début du test du package Liste **"
+gnatmake -q test_liste.adb
+./test_liste
+if [ $? -ne 0 ]
+then
+    echo "Echec du test"
+else
+    echo "Test réussi"
+fi
+rm test_liste
+echo ""
+
 # Test du package Fichier
 echo " ** Début du test du package Fichier **"
 gnatmake -q test_fichier.adb
@@ -41,7 +54,7 @@ for fic in $(cd svg && ls *.svg)
 do
 	fic="${fic%.svg}"
 	./main "svg/${fic}.svg" "stl/${fic}.stl"
-	echo "Fichier stl/${fic} créé"
+	echo "Fichier stl/${fic}.stl créé"
 done
 rm main
 echo ""

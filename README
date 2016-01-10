@@ -1,14 +1,10 @@
-Packages à coder :
 Plus tard peut-être
 	- Makefile
 	- fichier de config (nombre de points par courbe de bézier>=2, nombre de rotations effectuées>=3)
-	- test package math (les 2 procedures qui ont besoin des listes)
-
-Packages à tester : 
-    - liste_generique
 
 Terminés
 	- fichier
 	- test
 	- stl
-    - parse_svg
+    - parser_svg
+    - liste_generique

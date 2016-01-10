@@ -20,15 +20,23 @@ package body Test is
         end if;
     end;
 
-    procedure Assert_Equals(Actual,Expected: Natural) is
+    procedure Assert_Equals(Actual,Expected: Character) is
     begin
         if Actual /= Expected then
-            Put_Line("Erreur de test: '" & Natural'Image(Expected) & "' attendu, '" & Natural'Image(Actual) & "' obtenu");
+            Put_Line("Erreur de test: '" & Expected & "' attendu, '" & Actual & "' obtenu");
             raise Assertion_Failed;
         end if;
     end;
 
-	procedure Assert_Equals(Actual,Expected: Float) is
+    procedure Assert_Equals(Actual,Expected: Integer) is
+    begin
+        if Actual /= Expected then
+            Put_Line("Erreur de test: '" & Integer'Image(Expected) & "' attendu, '" & Integer'Image(Actual) & "' obtenu");
+            raise Assertion_Failed;
+        end if;
+    end;
+	
+    procedure Assert_Equals(Actual,Expected: Float) is
 	begin
 		if (Actual - Expected > EPSILON) or else (Actual - Expected < -EPSILON) then
 			Put_Line("Erreur de test: '" & Str_Float(Expected) & "' attendu, '" & Str_Float(Actual) & "' obtenu");
