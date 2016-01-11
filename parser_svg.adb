@@ -10,6 +10,8 @@ package body Parser_Svg is
         X_Min,Y_Min: Float;
         Premier_Point: Boolean := True;
 
+        -- Compare les coordonnées de P aux valeurs de Xmin et Ymin
+        -- Procédure appelée pour tous les points de la liste avec laquelle on travaille
         procedure Test_Point(P: in out Point2D) is
         begin
             if Premier_Point then
@@ -28,6 +30,7 @@ package body Parser_Svg is
             end if;
         end;
 
+        -- Effectue une translation de (-Xmin,-Ymin) sur P
         procedure Translater_Point(P: in out Point2D) is
         begin
             P(1) := P(1) - X_Min;
@@ -41,6 +44,8 @@ package body Parser_Svg is
         Translater(L);
     end;
 
+    -- Lit un nombre flottant dans une chaine à l'indice "Indice" dont la valeur est modifiée
+    -- Assure : Chaine(Indice) est le caractère qui suit le nombre lu
     procedure Lire_Float(Chaine: String; Indice: in out Integer; F: out Float) is
         Nombre: Unbounded_String := To_Unbounded_String("");
     begin
@@ -52,50 +57,52 @@ package body Parser_Svg is
         F := Float'Value(To_String(Nombre));
     end;
 
+    -- Lit les coordonnées d'un point 2D dans une chaine à l'indice "Indice"
+    -- Assure : Chaine(Indice) est le caractère qui suit le point lu
+    procedure Lire_Point(Chaine: String;Indice: in out Integer; P: out Point2D) is
+        F: Float;
+    begin
+        Lire_Float(Chaine,Indice,F);
+        P(1) := F;
+        Lire_Float(Chaine,Indice,F);
+        P(2) := F;
+    end;
+
     procedure Chargement_Bezier(Nom_Fichier : String; L : out Liste) is
-        Fic: File_Type;
         Caractere_Lu: Character;
         Chemin: Unbounded_String := To_Unbounded_String(""); -- Valeur de l'attribut d de la balise path (on utilise une chaine car le parcours de fichier dans les deux sens n'est pas très pratique dans ce langage)
         Commande: Character;
         Point_Courant: Point2D := (0.0,0.0);
         P1,P2,P3: Point2D;
-		F: Float;
+        F: Float;
         Liste_Temp: Liste;
-        Indice: Integer; 
+        Indice: Integer:=1;
 
-        -- Fonction servant à lire les coordonnées d'un point 2D dans un fichier ouvert en mode lecture
-        procedure Lire_Point(Chaine: String;Indice: in out Integer; P: out Point2D) is
-			F: Float;
-		begin
-            Lire_Float(Chaine,Indice,F);
-			P(1) := F;
-            Lire_Float(Chaine,Indice,F);
-			P(2) := F;
-        end;
+        procedure Charger_Chemin is
+            Fic : File_Type;
+        begin
+            Ouvrir_Fichier_Lecture(Fic,Nom_Fichier);
 
-    begin
-        -- ********* A mettre dans une fonction à part ******************
-        Ouvrir_Fichier_Lecture(Fic,Nom_Fichier);
+            -- On parcourt le fichier et on s'arrête après la première balise path puis on cherche l'attribut d
+            if not Trouver_Chaine_Fichier(Fic,"<path") or else not Trouver_Chaine_Fichier(Fic,"d=""")  then
+                Put_Line(Standard_Error, "Erreur, pas de balise path dans le fichier SVG ou bien pas d'attribut d dans la balise path");
+                raise Erreur_Chargement_Exception;
+            end if;
 
-        -- On parcourt le fichier et on s'arrête après la première balise path puis on cherche l'attribut d
-        if not Trouver_Chaine_Fichier(Fic,"<path") or else not Trouver_Chaine_Fichier(Fic,"d=""")  then
-            Put_Line(Standard_Error, "Erreur, pas de balise path dans le fichier SVG ou bien pas d'attribut d dans la balise path");
-            raise Erreur_Chargement_Exception;
-        end if;
-
-        -- On suppose que le fichier est normalement constitué, ie il reste bien un guillemet à
-        -- lire avant la fin du fichier
-        Caractere_Lu := Lire_Caractere_Fichier(Fic);
-        while Caractere_Lu /= '"' loop
-            Chemin := Chemin & Caractere_Lu;
+            -- On suppose que le fichier est normalement constitué, ie il reste bien un guillemet à
+            -- lire avant la fin du fichier
             Caractere_Lu := Lire_Caractere_Fichier(Fic);
-        end loop;
+            while Caractere_Lu /= '"' loop
+                Chemin := Chemin & Caractere_Lu;
+                Caractere_Lu := Lire_Caractere_Fichier(Fic);
+            end loop;
 
-        -- On a lu ce qu'on voulait lire
-        Fermer_Fichier(Fic);
-        -- ************* Fin du truc à mettre à part *****************
+            -- On a lu ce qu'on voulait lire
+            Fermer_Fichier(Fic);
+        end;
+    begin
+        Charger_Chemin;
 
-        Indice := 1;
         while Indice<=Length(Chemin) loop
             if not (Element(Chemin, Indice) in '0'..'9') and then Element(Chemin, Indice) /= '-' then -- Ici Element(Chemin, Indice) est une lettre => nouvelle commande
                 Commande := Element(Chemin, Indice);
@@ -111,27 +118,27 @@ package body Parser_Svg is
                     Insertion_Queue(L,Point_Courant);
                 when 'l' | 'm' => 
                     -- Line to, rel
-					Lire_Point(To_String(Chemin),Indice,P1);
+                    Lire_Point(To_String(Chemin),Indice,P1);
                     Point_Courant := Point_Courant + P1; 
                     Insertion_Queue(L,Point_Courant);
                 when 'H' =>
                     -- Déplacement horizontal (absolu)
-					Lire_Float(To_String(Chemin),Indice,F);
+                    Lire_Float(To_String(Chemin),Indice,F);
                     Point_Courant(1) := F;
                     Insertion_Queue(L,Point_Courant);
                 when 'h' =>
                     -- Déplacement horizontal (relatif)
-					Lire_Float(To_String(Chemin),Indice,F);
+                    Lire_Float(To_String(Chemin),Indice,F);
                     Point_Courant(1) := Point_Courant(1) + F;
                     Insertion_Queue(L,Point_Courant);
                 when 'V' =>
                     -- Déplacement vertical - abs
-					Lire_Float(To_String(Chemin),Indice,F);
+                    Lire_Float(To_String(Chemin),Indice,F);
                     Point_Courant(2) := F;
                     Insertion_Queue(L,Point_Courant);
                 when 'v' =>
                     -- Déplacement vertical - rel
-					Lire_Float(To_String(Chemin),Indice,F);
+                    Lire_Float(To_String(Chemin),Indice,F);
                     Point_Courant(2) := Point_Courant(2) + F;
                     Insertion_Queue(L,Point_Courant);
                 when 'Q' =>
@@ -144,9 +151,9 @@ package body Parser_Svg is
                 when 'q' =>
                     -- bezier quadra, rajoute N point - rel
                     Lire_Point(To_String(Chemin),Indice,P1);
-					P1 := P1 + Point_Courant;
+                    P1 := P1 + Point_Courant;
                     Lire_Point(To_String(Chemin),Indice,P2);
-				    P2 := P2 + Point_Courant;
+                    P2 := P2 + Point_Courant;
                     Bezier(Point_Courant,P1,P2,NB_POINTS_BEZIER,Liste_Temp);
                     Fusion(L,Liste_Temp);
                     Point_Courant := P2;
@@ -161,11 +168,11 @@ package body Parser_Svg is
                 when 'c' =>
                     -- bezier cubique, rajoute N point - rel
                     Lire_Point(To_String(Chemin),Indice,P1);
-				    P1 := P1 + Point_Courant;
+                    P1 := P1 + Point_Courant;
                     Lire_Point(To_String(Chemin),Indice,P2);
-				    P2 := P2 + Point_Courant;
+                    P2 := P2 + Point_Courant;
                     Lire_Point(To_String(Chemin),Indice,P3);
-					P3 := P3 + Point_Courant;
+                    P3 := P3 + Point_Courant;
                     Bezier(Point_Courant,P1,P2,P3,NB_POINTS_BEZIER,Liste_Temp);
                     Fusion(L,Liste_Temp);
                     Point_Courant := P3;

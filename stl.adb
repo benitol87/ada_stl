@@ -46,6 +46,7 @@ package body STL is
         end;
 
         procedure Parcours is new Liste_Points.Parcourir_Par_Couples(Traiter=>Traiter_Segment);
+
     begin
         Parcours(Segments);	
         Liste_Points.Vider(Segments);

@@ -1,10 +1,3 @@
 Plus tard peut-être
-	- Makefile
 	- fichier de config (nombre de points par courbe de bézier>=2, nombre de rotations effectuées>=3)
-
-Terminés
-	- fichier
-	- test
-	- stl
-    - parser_svg
-    - liste_generique
+    - rapport

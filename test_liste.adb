@@ -1,4 +1,4 @@
-with Liste_generique ;
+with Liste_Generique ;
 with Ada.Text_Io ; use Ada.Text_Io ;
 with Ada.Integer_Text_Io ; use Ada.Integer_Text_Io ;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
@@ -6,40 +6,43 @@ with Test; use Test;
 
 procedure Test_liste is
 
-	package Liste_caractere is new Liste_generique(Character);
-	use Liste_caractere ;
-	
-	function Transforme (L : Liste) return String is 
-		S : Unbounded_String ;
+    package Liste_Caractere is new Liste_Generique(Character);
+    use Liste_Caractere ;
 
-		procedure Concat(C: in out Character) is
-		begin
-			S := S & C;
-		end;
+    -- Transforme une liste de caractères en une chaine
+    function Transforme (L : Liste) return String is 
+        S : Unbounded_String ;
 
-		procedure Parcours is new Parcourir(Traiter=>Concat);
-	begin
-		S := To_Unbounded_String("");
-		Parcours(L);
-		return To_String(S) ;
-	end ;
-	
-	function TransformeBis (L : Liste) return String is
-		S : Unbounded_String ;
+        procedure Concat(C: in out Character) is
+        begin
+            S := S & C;
+        end;
 
-		procedure Affiche_Couple(C1,C2 : in Character) is
-		begin
-			S := S & C1 & C2;
-		end;
-		
-		procedure ParcoursBis is new Parcourir_Par_Couples(Traiter=>Affiche_Couple);
-	begin
-		S := To_Unbounded_String("");
-		ParcoursBis(L);
-		return To_String(S) ;
-	end ;
-	
-	L,M : Liste ;
+        procedure Parcours is new Parcourir(Traiter=>Concat);
+    begin
+        S := To_Unbounded_String("");
+        Parcours(L);
+        return To_String(S) ;
+    end ;
+
+    -- Transforme une liste de caractères en une chaine en répétant les caractères autres
+    -- que le premier et le dernier
+    function TransformeBis (L : Liste) return String is
+        S : Unbounded_String ;
+
+        procedure Affiche_Couple(C1,C2 : in Character) is
+        begin
+            S := S & C1 & C2;
+        end;
+
+        procedure ParcoursBis is new Parcourir_Par_Couples(Traiter=>Affiche_Couple);
+    begin
+        S := To_Unbounded_String("");
+        ParcoursBis(L);
+        return To_String(S) ;
+    end ;
+
+    L,M : Liste ;
 
     procedure Test_Vider is
     begin
@@ -140,4 +143,8 @@ begin
     Test_Insertion_Queue;
     Test_Vider; 
     Test_Concatenation;
+exception
+    when Assertion_Failed =>
+        Put_Line(Standard_Error, "Erreur, échec du test du package Liste");
+        raise Test_Failed;
 end;
