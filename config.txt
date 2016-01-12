@@ -1,0 +1,4 @@
+nbRotations    = 200   
+nbPointsBezier =  50  
+
+
