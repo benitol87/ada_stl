@@ -87,6 +87,7 @@ begin
     --on sauvegarde le modele obtenu
     Sauvegarder(Argument(2), Facettes);
 exception
-    when Name_Error => Put_Line(Standard_Error, "Erreur : Fichier SVG non trouvé");
-
+    when Name_Error =>
+        Put_Line(Standard_Error, "Erreur : Fichier SVG non trouvé");
+        Set_Exit_Status(Failure);
 end;
