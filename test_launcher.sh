@@ -49,6 +49,18 @@ echo ""
 # Test du programme principal
 echo " ** Début du test du programme **"
 gnatmake -q main.adb
+
+echo -n "Test fichier SVG non existant : "
+rm truc.svg 2>/dev/null
+./main truc.svg truc.stl 2>/dev/null
+if [ $? -eq 0 ]
+then
+    echo "Echec"
+else
+    echo "Réussite"
+fi
+
+
 for fic in $(cd svg && ls *.svg)
 do
 	fic="${fic%.svg}"

@@ -18,19 +18,31 @@ procedure Main is
             Val: Integer;
         begin
             if Cle = "nbRotations" then
-                Val := Integer'Value(Valeur);
+                begin
+                    Val := Integer'Value(Valeur);
+                exception
+                    when Constraint_Error => Put_Line(Standard_Error, "La valeur de nbRotations doit être un entier");
+                end;
 
-                if Val >2 then
+                if Val > 2 then
                     NB_ROTATIONS:=Val; -- On modifie la valeur si celle passée en config vaut au moins 3
+                else
+                    Put_Line(Standard_Error, "La valeur de nbRotations doit être strictement supérieure à 2 (valeur par défaut conservée)");
                 end if;
             elsif Cle = "nbPointsBezier" then
-                Val := Integer'Value(Valeur);
+                begin
+                    Val := Integer'Value(Valeur);
+                exception
+                    when Constraint_Error => Put_Line(Standard_Error, "La valeur de nbPointsBezier doit être un entier");
+                end;
 
                 if Val > 1 then
                     NB_POINTS_BEZIER := Val; -- On modifie la valeur si celle passée en config vaut au moins 2
+                else
+                    Put_Line(Standard_Error, "La valeur de nbPointsBezier doit être strictement supérieure à 1 (valeur par défaut conservée)");
                 end if;
             else
-                Put_Line("Erreur lors de la lecture du fichier de configuration, clé non reconnue : " & Cle);
+                Put_Line(Standard_Error,"Erreur lors de la lecture du fichier de configuration, clé non reconnue : " & Cle);
             end if;
         end;
     begin
@@ -74,4 +86,7 @@ begin
     Creation(Segments, Facettes);
     --on sauvegarde le modele obtenu
     Sauvegarder(Argument(2), Facettes);
+exception
+    when Name_Error => Put_Line(Standard_Error, "Erreur : Fichier SVG non trouvé");
+
 end;
